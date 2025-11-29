@@ -1,20 +1,17 @@
 import React, { useState } from 'react';
 import { Project, ProjectStatus, Evaluation } from '../types';
-import { Building2, HardHat, DollarSign, FileText, BrainCircuit, Loader2, Image as ImageIcon, Star, Trash2, Pencil, ChevronLeft, ChevronRight, X, FileCheck, User } from 'lucide-react';
+import { Building2, HardHat, DollarSign, FileText, Image as ImageIcon, Star, Trash2, Pencil, ChevronLeft, ChevronRight, X, FileCheck, User } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
-import { analyzeProject } from '../services/geminiService';
 
 interface ProjectCardProps {
   project: Project;
-  onUpdateAnalysis: (projectId: string, analysis: string) => void;
   onDelete: (projectId: string) => void;
   onUpdateProject: (project: Project) => void;
   onEdit: (project: Project) => void;
 }
 
-const ProjectCard: React.FC<ProjectCardProps> = ({ project, onUpdateAnalysis, onDelete, onUpdateProject, onEdit }) => {
+const ProjectCard: React.FC<ProjectCardProps> = ({ project, onDelete, onUpdateProject, onEdit }) => {
   const [activeTab, setActiveTab] = useState<'desc' | 'contractor' | 'costs' | 'photos' | 'evaluation' | 'invoices'>('desc');
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [evaluationForm, setEvaluationForm] = useState<Partial<Evaluation>>({
     rating: project.evaluation?.rating || 0,
     comment: project.evaluation?.comment || ''
@@ -42,13 +39,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onUpdateAnalysis, on
       case ProjectStatus.ON_HOLD: return 'bg-orange-100 text-orange-800 border-orange-200';
       default: return 'bg-gray-100 text-gray-800';
     }
-  };
-
-  const handleAnalyze = async () => {
-    setIsAnalyzing(true);
-    const result = await analyzeProject(project);
-    onUpdateAnalysis(project.id, result);
-    setIsAnalyzing(false);
   };
 
   const handleSaveEvaluation = () => {
@@ -155,28 +145,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onUpdateAnalysis, on
           {activeTab === 'desc' && (
             <div className="animate-fadeIn space-y-4">
               <p className="text-slate-600 text-sm leading-relaxed">{project.description}</p>
-              
-              <div className="pt-4 border-t border-gray-100 bg-slate-50 p-3 rounded-lg">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-semibold text-slate-500 uppercase flex items-center gap-1">
-                    <BrainCircuit size={14} className="text-purple-500"/> Análise de IA
-                  </span>
-                  {!project.aiAnalysis && (
-                    <button 
-                      onClick={handleAnalyze} 
-                      disabled={isAnalyzing}
-                      className="text-xs bg-purple-100 text-purple-700 hover:bg-purple-200 px-2 py-1 rounded transition-colors disabled:opacity-50"
-                    >
-                      {isAnalyzing ? <span className="flex items-center gap-1"><Loader2 size={10} className="animate-spin"/> Analisando...</span> : 'Gerar Insight'}
-                    </button>
-                  )}
-                </div>
-                {project.aiAnalysis ? (
-                   <p className="text-xs text-purple-800 italic">{project.aiAnalysis}</p>
-                ) : (
-                  <p className="text-xs text-gray-400 italic">Clique para gerar uma análise de custos e viabilidade com IA.</p>
-                )}
-              </div>
             </div>
           )}
 

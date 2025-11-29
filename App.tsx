@@ -73,13 +73,12 @@ const App: React.FC = () => {
     return { totalProjects, activeProjects, completedProjects, totalInvested, costByUnit, monthlyCosts };
   }, [projects]);
 
-  const handleSaveProject = (projectData: Omit<Project, 'id' | 'aiAnalysis'>) => {
+  const handleSaveProject = (projectData: Omit<Project, 'id'>) => {
     if (editingProject) {
       // Update existing
       const updatedProject: Project = {
         ...projectData,
         id: editingProject.id,
-        aiAnalysis: editingProject.aiAnalysis,
         evaluation: editingProject.evaluation
       };
       setProjects(prev => prev.map(p => p.id === updatedProject.id ? updatedProject : p));
@@ -93,10 +92,6 @@ const App: React.FC = () => {
       setProjects(prev => [...prev, newProject]);
     }
     setIsModalOpen(false);
-  };
-
-  const handleUpdateAnalysis = (projectId: string, analysis: string) => {
-    setProjects(prev => prev.map(p => p.id === projectId ? { ...p, aiAnalysis: analysis } : p));
   };
 
   const handleDeleteProject = (projectId: string) => {
@@ -366,7 +361,6 @@ const App: React.FC = () => {
                 <ProjectCard 
                   key={project.id} 
                   project={project} 
-                  onUpdateAnalysis={handleUpdateAnalysis} 
                   onDelete={handleDeleteProject}
                   onUpdateProject={handleUpdateProject}
                   onEdit={handleEditClick}

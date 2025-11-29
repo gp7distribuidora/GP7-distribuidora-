@@ -42,7 +42,6 @@ export interface Project {
   images: string[]; // URLs of photos
   invoices: string[]; // URLs of PDFs
   evaluation?: Evaluation;
-  aiAnalysis?: string; // Field to store Gemini analysis
 }
 
 export interface Unit {

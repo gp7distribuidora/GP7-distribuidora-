@@ -5,7 +5,7 @@ import { X, ImagePlus, Briefcase, FileText, User, Users } from 'lucide-react';
 interface ProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (project: Omit<Project, 'id' | 'aiAnalysis'>) => void;
+  onSave: (project: Omit<Project, 'id'>) => void;
   unit: Unit;
   projectToEdit?: Project | null;
 }
